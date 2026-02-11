@@ -105,7 +105,7 @@ async function getAccessToken(): Promise<string | null> {
         grant_type: "refresh_token",
         refresh_token: process.env.STRAVA_REFRESH_TOKEN,
       }),
-      cache: "no-store",
+      next: { revalidate: 3600 },
     });
 
     if (!res.ok) {
