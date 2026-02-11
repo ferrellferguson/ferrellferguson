@@ -112,7 +112,7 @@ function Footer() {
                 GitHub
               </a>
               <a
-                href="https://linkedin.com/in/ferrellferguson"
+                href="https://www.linkedin.com/in/ferrellferguson/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-sm text-muted transition-colors hover:text-foreground"
@@ -120,7 +120,7 @@ function Footer() {
                 LinkedIn
               </a>
               <a
-                href="https://www.strava.com/"
+                href="https://www.strava.com/athletes/28016965"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-sm text-muted transition-colors hover:text-foreground"

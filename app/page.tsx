@@ -37,7 +37,7 @@ function Hero() {
           modern JavaScript. Currently diving into Next.js, training for
           triathlons, and raising two amazing kids. I believe in{" "}
           <span className="font-medium text-foreground">
-            starting small and iterating fast
+            thinking big, starting small, and doing it now
           </span>
           .
         </p>
@@ -362,7 +362,7 @@ function About() {
               in meeting challenges head-on.
             </p>
             <blockquote className="border-l-2 border-accent pl-4 text-lg font-medium text-foreground italic">
-              &ldquo;Start small, iterate fast, ship it.&rdquo;
+              &ldquo;Think big, start small, do it now.&rdquo;
             </blockquote>
           </div>
           <div className="lg:col-span-2 space-y-6">
@@ -535,7 +535,7 @@ function Contact() {
                   },
                   {
                     label: "LinkedIn",
-                    href: "https://linkedin.com/in/ferrellferguson",
+                    href: "https://www.linkedin.com/in/ferrellferguson/",
                     desc: "Professional network",
                     icon: (
                       <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
@@ -545,7 +545,7 @@ function Contact() {
                   },
                   {
                     label: "Strava",
-                    href: "https://www.strava.com/",
+                    href: "https://www.strava.com/athletes/28016965",
                     desc: "Cycling & training",
                     icon: (
                       <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
@@ -591,10 +591,10 @@ function Contact() {
               <p className="text-sm text-muted">
                 Prefer email? Reach me at{" "}
                 <a
-                  href="mailto:ferrell@ferrellferguson.com"
+                  href="mailto:ferrellferguson@gmail.com"
                   className="font-medium text-accent transition-colors hover:text-accent-hover"
                 >
-                  ferrell@ferrellferguson.com
+                  ferrellferguson@gmail.com
                 </a>
               </p>
             </div>
