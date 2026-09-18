@@ -147,18 +147,28 @@ function SideProjects() {
       status: "Live",
     },
     {
-      name: "Cycling Stats Dashboard",
-      tech: ["React", "Strava API", "Chart.js"],
+      name: "tesla-watch",
+      url: "https://github.com/ferrellferguson/ferrellferguson/tree/main/tesla-watch",
+      tech: ["Node.js", "Vercel Functions", "Upstash Redis"],
       description:
-        "A personal dashboard for tracking cycling metrics, training progress, and ride history. Pulls data from Strava.",
-      status: "In Progress",
+        "A serverless watcher that scans Tesla's used-inventory API on a schedule and pings me on Telegram or email the moment a car matching my criteria shows up, or drops in price.",
+      status: "Live",
     },
     {
-      name: "Markdown Note Sync",
-      tech: ["Node.js", "CLI", "File System"],
+      name: "TX Tough Trailers",
+      url: "https://txtoughtrailers.com",
+      tech: ["Next.js", "Supabase", "Stripe"],
       description:
-        "A simple CLI tool for syncing markdown notes across devices. Built because I wanted something lightweight.",
-      status: "Idea",
+        "A peer-to-peer trailer rental marketplace for Texas — browse and book trailers with Stripe checkout, calendar sync, and an owner admin panel.",
+      status: "Live",
+    },
+    {
+      name: "unmanufactured.org",
+      url: "https://unmanufactured.org",
+      tech: ["Next.js", "Neon Postgres", "Vercel AI SDK"],
+      description:
+        "A narrative drift tracker that polls multiple AI models about the same news event over time and flags when their narratives shift without new evidence.",
+      status: "Live",
     },
   ];
 
@@ -184,36 +194,47 @@ function SideProjects() {
           </p>
         </div>
         <div className="grid gap-6 md:grid-cols-3">
-          {projects.map((project) => (
-            <div
-              key={project.name}
-              className="gradient-border group flex flex-col overflow-hidden p-6 transition-all duration-300 hover:shadow-[var(--card-shadow-hover)] hover:-translate-y-1"
-            >
-              <div className="mb-4 flex items-center justify-between">
-                <span
-                  className={`rounded-full border px-3 py-1 text-xs font-medium ${statusColors[project.status]}`}
-                >
-                  {project.status}
-                </span>
-              </div>
-              <h3 className="mb-2 text-lg font-semibold text-foreground">
-                {project.name}
-              </h3>
-              <p className="mb-5 flex-1 text-sm leading-relaxed text-muted">
-                {project.description}
-              </p>
-              <div className="flex flex-wrap gap-1.5">
-                {project.tech.map((t) => (
+          {projects.map((project) => {
+            const Wrapper = project.url ? "a" : "div";
+            const wrapperProps = project.url
+              ? {
+                  href: project.url,
+                  target: "_blank",
+                  rel: "noopener noreferrer",
+                }
+              : {};
+            return (
+              <Wrapper
+                key={project.name}
+                {...wrapperProps}
+                className="gradient-border group flex flex-col overflow-hidden p-6 transition-all duration-300 hover:shadow-[var(--card-shadow-hover)] hover:-translate-y-1"
+              >
+                <div className="mb-4 flex items-center justify-between">
                   <span
-                    key={t}
-                    className="rounded-md bg-muted-bg border border-border/50 px-2.5 py-1 text-xs text-muted font-mono"
+                    className={`rounded-full border px-3 py-1 text-xs font-medium ${statusColors[project.status]}`}
                   >
-                    {t}
+                    {project.status}
                   </span>
-                ))}
-              </div>
-            </div>
-          ))}
+                </div>
+                <h3 className="mb-2 text-lg font-semibold text-foreground group-hover:text-accent transition-colors">
+                  {project.name}
+                </h3>
+                <p className="mb-5 flex-1 text-sm leading-relaxed text-muted">
+                  {project.description}
+                </p>
+                <div className="flex flex-wrap gap-1.5">
+                  {project.tech.map((t) => (
+                    <span
+                      key={t}
+                      className="rounded-md bg-muted-bg border border-border/50 px-2.5 py-1 text-xs text-muted font-mono"
+                    >
+                      {t}
+                    </span>
+                  ))}
+                </div>
+              </Wrapper>
+            );
+          })}
         </div>
       </div>
     </section>
