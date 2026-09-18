@@ -42,6 +42,15 @@ function priceHistoryLine(history) {
     .join(' <span class="arrow">&rarr;</span> ');
 }
 
+function summarizeError(raw) {
+  if (!raw) return "";
+  // Tesla's Akamai block page comes through as a full HTML document; strip
+  // markup and collapse whitespace so the status card shows a readable line
+  // instead of a wall of tags.
+  const text = String(raw).replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+  return text.length > 160 ? `${text.slice(0, 160)}…` : text;
+}
+
 function orderUrl(vin) {
   return `https://www.tesla.com/m3/order/${encodeURIComponent(vin)}`;
 }
@@ -157,6 +166,14 @@ module.exports = async function handler(req, res) {
   }
   .order-link:hover { text-decoration: underline; }
   .empty { color: #8b8b96; font-size: 14px; }
+  .run-now { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+  .run-now button {
+    background: #7c3aed; color: white; border: none; border-radius: 8px;
+    padding: 8px 16px; font-size: 13px; font-weight: 600; cursor: pointer;
+  }
+  .run-now button:hover { background: #8b5cf6; }
+  .run-now button:disabled { opacity: 0.6; cursor: default; }
+  .run-status { font-size: 12px; color: #8b8b96; min-width: 140px; }
 </style>
 </head>
 <body>
@@ -172,7 +189,11 @@ module.exports = async function handler(req, res) {
       <div class="stat">Last checked <b>${fmtRelative(runMeta.finishedAt)}</b></div>
       ${runMeta.totalScanned ? `<div class="stat"><b>${esc(runMeta.totalScanned)}</b> listings scanned</div>` : ""}
       <div class="stat"><b>${active.length}</b> current match${active.length === 1 ? "" : "es"}</div>
-      ${runMeta.error ? `<div class="stat" style="color:#fca5a5">${esc(runMeta.error).slice(0, 140)}</div>` : ""}
+      ${runMeta.error ? `<div class="stat" style="color:#fca5a5">${esc(summarizeError(runMeta.error))}</div>` : ""}
+      <div class="run-now">
+        <span class="run-status" id="runStatus"></span>
+        <button id="runNowBtn" type="button">Run Now</button>
+      </div>
     </div>
 
     <h2>Current Matches</h2>
@@ -191,6 +212,55 @@ module.exports = async function handler(req, res) {
         : ""
     }
   </div>
+  <script>
+    (function () {
+      var STORAGE_KEY = "tesla_watch_secret";
+      var btn = document.getElementById("runNowBtn");
+      var statusEl = document.getElementById("runStatus");
+
+      function setStatus(text) {
+        statusEl.textContent = text;
+      }
+
+      btn.addEventListener("click", function () {
+        var secret = localStorage.getItem(STORAGE_KEY);
+        if (!secret) {
+          secret = window.prompt("Cron secret (remembered on this device only):") || "";
+          if (!secret) return;
+          localStorage.setItem(STORAGE_KEY, secret);
+        }
+
+        btn.disabled = true;
+        setStatus("Running scan...");
+
+        fetch("/api/scan?secret=" + encodeURIComponent(secret))
+          .then(function (res) {
+            if (res.status === 401) {
+              localStorage.removeItem(STORAGE_KEY);
+              throw new Error("Wrong secret — try again");
+            }
+            return res.json().then(function (body) {
+              if (!res.ok) throw new Error(body.message || body.error || "Scan failed");
+              return body;
+            });
+          })
+          .then(function (body) {
+            if (body.blocked) {
+              setStatus("Blocked by Tesla — see status below");
+            } else {
+              setStatus("Done — reloading...");
+            }
+            setTimeout(function () {
+              window.location.reload();
+            }, 1200);
+          })
+          .catch(function (err) {
+            btn.disabled = false;
+            setStatus(err.message);
+          });
+      });
+    })();
+  </script>
 </body>
 </html>`;
 
