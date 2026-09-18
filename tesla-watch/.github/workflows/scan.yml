@@ -1,0 +1,36 @@
+# Runs the deployed /api/scan endpoint on a schedule, more often than Vercel's
+# Hobby-plan native Cron Jobs allow (Hobby is capped at one run/day; this repo's
+# vercel.json cron is kept as a once-daily backstop in case this workflow ever
+# stops firing). GitHub Actions' free tier covers scheduled workflows on public
+# repos, and is generous enough for a private repo running every 30 minutes too.
+#
+# Setup:
+#   1. In your GitHub repo settings > Secrets and variables > Actions, add:
+#        VERCEL_APP_URL   = https://<your-deployed-project>.vercel.app
+#        CRON_SECRET      = the same value you set in Vercel's env vars
+#   2. That's it — this file is already wired to use them.
+#
+# Note: GitHub's scheduler is best-effort and can delay a few minutes under
+# load, especially for repos with little other activity. That's fine here —
+# a few minutes of jitter doesn't matter for inventory watching.
+
+name: Scan Tesla inventory
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"
+  workflow_dispatch: {}
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call scan endpoint
+        run: |
+          curl -sS -f "${VERCEL_APP_URL}/api/scan?secret=${CRON_SECRET}" \
+            -H "Accept: application/json" \
+            -o response.json
+          cat response.json
+        env:
+          VERCEL_APP_URL: ${{ secrets.VERCEL_APP_URL }}
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}

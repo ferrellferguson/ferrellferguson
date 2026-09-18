@@ -1,0 +1,13 @@
+{
+  "name": "tesla-watch",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Serverless Tesla used-inventory watcher — scans Tesla's public inventory API on a schedule and notifies on new/repriced matches.",
+  "type": "commonjs",
+  "scripts": {
+    "dev": "vercel dev"
+  },
+  "dependencies": {
+    "@upstash/redis": "^1.34.0"
+  }
+}
