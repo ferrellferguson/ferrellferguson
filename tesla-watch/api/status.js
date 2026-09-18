@@ -67,7 +67,9 @@ function carCard(car, history, { delisted } = {}) {
 }
 
 module.exports = async function handler(req, res) {
-  const [cars, runMeta] = await Promise.all([getAllCars(), getRunMeta()]);
+  const [cars, runMetaRaw] = await Promise.all([getAllCars(), getRunMeta()]);
+  // hgetall on a key that has never been written returns null, not {}.
+  const runMeta = runMetaRaw || {};
 
   const withHistory = await Promise.all(
     cars.map(async (car) => ({ car, history: await getPriceHistory(car.vin) }))
