@@ -34,12 +34,12 @@ yarn-error.log*
 .env*
 !.env.example
 
+# claude code local settings (may contain tokens)
+.claude/settings.local.json
+
 # vercel
 .vercel
 
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-
-.vercel
-.env*
