@@ -42,12 +42,24 @@ function priceHistoryLine(history) {
     .join(' <span class="arrow">&rarr;</span> ');
 }
 
+const NAMED_ENTITIES = { amp: "&", lt: "<", gt: ">", quot: '"', "#39": "'", apos: "'" };
+
+function decodeEntities(s) {
+  return s.replace(/&#(\d+);|&([a-zA-Z0-9#]+);/g, (m, dec, named) => {
+    if (dec) return String.fromCharCode(Number(dec));
+    return NAMED_ENTITIES[named] ?? m;
+  });
+}
+
 function summarizeError(raw) {
   if (!raw) return "";
-  // Tesla's Akamai block page comes through as a full HTML document; strip
-  // markup and collapse whitespace so the status card shows a readable line
-  // instead of a wall of tags.
-  const text = String(raw).replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+  // Tesla's Akamai block page comes through as a full HTML document with its
+  // URL entity-encoded (e.g. "&#58;" for ":"); strip markup, decode entities,
+  // and collapse whitespace so the status card shows a readable line instead
+  // of a wall of tags and escape codes.
+  const text = decodeEntities(String(raw).replace(/<[^>]*>/g, " "))
+    .replace(/\s+/g, " ")
+    .trim();
   return text.length > 160 ? `${text.slice(0, 160)}…` : text;
 }
 
@@ -237,15 +249,22 @@ module.exports = async function handler(req, res) {
           .then(function (res) {
             if (res.status === 401) {
               localStorage.removeItem(STORAGE_KEY);
-              throw new Error("Wrong secret — try again");
+              var authErr = new Error("Wrong secret — try again");
+              authErr.isAuthError = true;
+              throw authErr;
             }
             return res.json().then(function (body) {
-              if (!res.ok) throw new Error(body.message || body.error || "Scan failed");
-              return body;
+              // Any other non-2xx (e.g. Tesla fetch failure) still gets
+              // recorded server-side by /api/scan itself, so just reload
+              // to show the cleaned-up summary in the status card rather
+              // than dumping the raw error here.
+              return { body: body, failed: !res.ok };
             });
           })
-          .then(function (body) {
-            if (body.blocked) {
+          .then(function (result) {
+            if (result.failed) {
+              setStatus("Error — see status below");
+            } else if (result.body.blocked) {
               setStatus("Blocked by Tesla — see status below");
             } else {
               setStatus("Done — reloading...");
@@ -256,7 +275,7 @@ module.exports = async function handler(req, res) {
           })
           .catch(function (err) {
             btn.disabled = false;
-            setStatus(err.message);
+            setStatus(err.isAuthError ? err.message : "Something went wrong — try again");
           });
       });
     })();
