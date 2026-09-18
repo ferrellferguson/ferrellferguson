@@ -1,6 +1,13 @@
 const { fetchAllUsedModel3s } = require("../lib/teslaApi");
 const { normalize, classify } = require("../lib/criteria");
-const { getCar, saveCar, getAllKnownVins } = require("../lib/store");
+const {
+  getCar,
+  saveCar,
+  getAllKnownVins,
+  appendPriceHistory,
+  saveRunMeta,
+  isTrue,
+} = require("../lib/store");
 const { notifyNewMatch, notifyPriceDrop } = require("../lib/notify");
 
 module.exports = async function handler(req, res) {
@@ -25,6 +32,13 @@ module.exports = async function handler(req, res) {
     ({ cars, blocked, pagesFetched } = await fetchAllUsedModel3s());
   } catch (err) {
     console.error("Tesla API fetch failed:", err);
+    await saveRunMeta({
+      startedAt,
+      finishedAt: new Date().toISOString(),
+      ok: "false",
+      blocked: "false",
+      error: String(err).slice(0, 500),
+    });
     res.status(502).json({ error: "tesla_fetch_failed", message: String(err) });
     return;
   }
@@ -33,6 +47,13 @@ module.exports = async function handler(req, res) {
     // Tesla's bot-detection kicked in. Per policy: never try to work around
     // this. Just report it and let the next scheduled run try again later.
     console.warn("Tesla API returned a bot-detection challenge — backing off.");
+    await saveRunMeta({
+      startedAt,
+      finishedAt: new Date().toISOString(),
+      ok: "false",
+      blocked: "true",
+      error: "",
+    });
     res.status(200).json({
       startedAt,
       blocked: true,
@@ -73,6 +94,7 @@ module.exports = async function handler(req, res) {
         lastSeenAt: nowIso,
         stillListed: "true",
       });
+      await appendPriceHistory(car.vin, car.price);
       newMatches.push(car);
       await notifyNewMatch(car);
     } else {
@@ -85,7 +107,12 @@ module.exports = async function handler(req, res) {
       };
       await saveCar(car.vin, updates);
 
-      if (!Number.isNaN(oldPrice) && car.price != null && car.price < oldPrice) {
+      const priceChanged =
+        !Number.isNaN(oldPrice) && car.price != null && car.price !== oldPrice;
+      if (priceChanged) {
+        await appendPriceHistory(car.vin, car.price);
+      }
+      if (priceChanged && car.price < oldPrice) {
         priceDrops.push({ car, oldPrice });
         await notifyPriceDrop(car, oldPrice);
       }
@@ -100,10 +127,23 @@ module.exports = async function handler(req, res) {
   for (const vin of knownVins) {
     if (seenThisRun.has(vin)) continue;
     const existing = await getCar(vin);
-    if (existing && existing.stillListed === "true") {
+    if (existing && isTrue(existing.stillListed)) {
       await saveCar(vin, { stillListed: "false", delistedAt: nowIso });
     }
   }
+
+  await saveRunMeta({
+    startedAt,
+    finishedAt: nowIso,
+    ok: "true",
+    blocked: "false",
+    error: "",
+    pagesFetched,
+    totalScanned: cars.length,
+    matchesThisRun: seenThisRun.size,
+    newMatchCount: newMatches.length,
+    priceDropCount: priceDrops.length,
+  });
 
   res.status(200).json({
     startedAt,
