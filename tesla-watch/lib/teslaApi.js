@@ -63,7 +63,8 @@ async function fetchPage(offset) {
   }
 
   if (!res.ok) {
-    throw new Error(`Tesla API returned HTTP ${res.status}`);
+    const body = await res.text().catch(() => "");
+    throw new Error(`Tesla API returned HTTP ${res.status}: ${body.slice(0, 500)}`);
   }
 
   const data = await res.json();
