@@ -207,14 +207,6 @@ function SideProjects() {
       status: "Live",
     },
     {
-      name: "tesla-watch",
-      url: "https://tesla-watch.vercel.app",
-      tech: ["Node.js", "Vercel Functions", "Upstash Redis"],
-      description:
-        "A serverless watcher that scans Tesla's used-inventory API on a schedule and pings me on Telegram or email the moment a car matching my criteria shows up, or drops in price. Status page tracks current matches and price history.",
-      status: "Live",
-    },
-    {
       name: "TX Tough Trailers",
       url: "https://txtoughtrailers.com",
       tech: ["Next.js", "Supabase", "Stripe"],

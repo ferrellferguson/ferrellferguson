@@ -12,9 +12,6 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
-    // tesla-watch is a separate, plain-JS CommonJS project that deploys as
-    // its own Vercel project; it isn't part of this Next.js app.
-    "tesla-watch/**",
   ]),
 ]);
 
