@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getAllPosts } from "@/lib/blog";
+import { ContactForm } from "./components/contact-form";
 
 function Hero() {
   return (
@@ -28,26 +29,29 @@ function Hero() {
           <span className="gradient-text">Ferrell Ferguson</span>
         </h1>
 
-        <p className="animate-fade-in-up animate-delay-100 mb-4 text-xl text-muted md:text-2xl">
-          Developer. Cyclist. Dad. Builder of things.
+        <p className="animate-fade-in-up animate-delay-100 mb-4 text-xl text-foreground md:text-2xl">
+          HR systems engineer for the federal government.
         </p>
 
         <p className="animate-fade-in-up animate-delay-200 mb-8 max-w-2xl text-base leading-relaxed text-muted md:text-lg">
-          Software engineer with 25+ years of experience — from ColdFusion to
-          modern JavaScript. Currently diving into Next.js, training for
-          triathlons, and raising two amazing kids. I believe in{" "}
-          <span className="font-medium text-foreground">
-            thinking big, starting small, and doing it now
-          </span>
-          .
+          For 25+ years I&apos;ve kept mission-critical personnel systems
+          running, and moved them onto modern platforms without disrupting the
+          people who depend on them. Outside of work: cyclist, triathlete in
+          training, dad, and builder of things.
         </p>
 
         <div className="animate-fade-in-up animate-delay-300 flex flex-wrap gap-4">
           <a
-            href="#projects"
+            href="#work"
             className="btn-glow rounded-xl px-7 py-3.5 text-sm font-medium text-white"
           >
-            View Projects
+            What I Do
+          </a>
+          <a
+            href="#contact"
+            className="rounded-xl border border-border px-7 py-3.5 text-sm font-medium text-foreground transition-all hover:border-accent/30 hover:bg-accent/5"
+          >
+            Résumé on Request
           </a>
           <Link
             href="/blog"
@@ -55,13 +59,69 @@ function Hero() {
           >
             Read Blog
           </Link>
-          <a
-            href="#contact"
-            className="rounded-xl border border-border px-7 py-3.5 text-sm font-medium text-foreground transition-all hover:border-accent/30 hover:bg-accent/5"
-          >
-            Contact
-          </a>
         </div>
+      </div>
+    </section>
+  );
+}
+
+function WhatIDo() {
+  const services = [
+    {
+      title: "Federal HR Systems",
+      description:
+        "Personnel data, integrations, and compliance-driven change in systems that can't go down.",
+      emoji: "🏛️",
+    },
+    {
+      title: "Legacy Modernization",
+      description:
+        "Taking long-lived platforms like ColdFusion and moving them to modern stacks, step by step, without a risky big-bang rewrite.",
+      emoji: "🔄",
+    },
+    {
+      title: "Sustainment",
+      description:
+        "Keeping aging systems stable, secure, and supported while the path off of them gets planned and funded.",
+      emoji: "🛡️",
+    },
+    {
+      title: "Modern Engineering",
+      description:
+        "TypeScript, React / Next.js, Node, Postgres, cloud deployment, and AI-assisted development.",
+      emoji: "⚡",
+    },
+  ];
+
+  return (
+    <section id="work" className="relative mx-auto max-w-6xl px-6 py-24">
+      <div className="mb-12">
+        <span className="tag-gradient mb-4 inline-block rounded-full px-4 py-1.5 text-xs font-medium text-accent">
+          What I Do
+        </span>
+        <h2 className="mb-4 text-3xl font-bold tracking-tight md:text-4xl">
+          Keep It Running. Move It Forward.
+        </h2>
+        <p className="max-w-xl text-muted">
+          Agencies need the systems they have today to work, and a safe path to
+          the systems they need tomorrow. I do both.
+        </p>
+      </div>
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+        {services.map((service) => (
+          <div
+            key={service.title}
+            className="gradient-border overflow-hidden p-6"
+          >
+            <span className="mb-4 block text-3xl">{service.emoji}</span>
+            <h3 className="mb-2 text-lg font-semibold text-foreground">
+              {service.title}
+            </h3>
+            <p className="text-sm leading-relaxed text-muted">
+              {service.description}
+            </p>
+          </div>
+        ))}
       </div>
     </section>
   );
@@ -86,7 +146,7 @@ function FamilyProjects() {
   ];
 
   return (
-    <section id="projects" className="relative mx-auto max-w-6xl px-6 py-24">
+    <section id="family" className="relative mx-auto max-w-6xl px-6 py-24">
       <div className="mb-12">
         <span className="tag-gradient mb-4 inline-block rounded-full px-4 py-1.5 text-xs font-medium text-accent">
           Family Projects
@@ -179,7 +239,10 @@ function SideProjects() {
   };
 
   return (
-    <section className="border-y border-border/50 bg-muted-bg/50">
+    <section
+      id="projects"
+      className="border-y border-border/50 bg-muted-bg/50"
+    >
       <div className="mx-auto max-w-6xl px-6 py-24">
         <div className="mb-12">
           <span className="tag-gradient mb-4 inline-block rounded-full px-4 py-1.5 text-xs font-medium text-accent">
@@ -333,15 +396,16 @@ function BlogPreview() {
 
 function About() {
   const skills = [
+    { name: "Federal HR systems", level: "Career focus" },
+    { name: "Legacy modernization (ColdFusion → modern stacks)", level: "Specialty" },
     { name: "JavaScript / TypeScript", level: "25+ years" },
-    { name: "React / Next.js", level: "Learning" },
+    { name: "React / Next.js", level: "Production" },
     { name: "Node.js", level: "Experienced" },
-    { name: "ColdFusion", level: "Veteran" },
     { name: "SQL / Databases", level: "Experienced" },
+    { name: "REST APIs / Integrations", level: "Experienced" },
     { name: "HTML / CSS / Tailwind", level: "Experienced" },
     { name: "Git / GitHub", level: "Daily driver" },
-    { name: "REST APIs", level: "Experienced" },
-    { name: "AI Tools / Claude Code", level: "Exploring" },
+    { name: "AI-assisted development", level: "Daily driver" },
   ];
 
   return (
@@ -358,16 +422,22 @@ function About() {
         <div className="grid gap-12 lg:grid-cols-5">
           <div className="lg:col-span-3 space-y-5 text-muted leading-relaxed">
             <p className="text-lg">
-              I&apos;ve been building things on the web for over{" "}
-              <span className="font-medium text-foreground">25 years</span>.
-              Started with ColdFusion in the late &apos;90s, rode the jQuery
-              wave, survived the Angular years, and landed in the React
-              ecosystem.
+              I&apos;ve spent my career inside{" "}
+              <span className="font-medium text-foreground">
+                federal HR systems
+              </span>
+              : the ones that handle personnel actions, pay, and benefits for
+              the people who serve.
             </p>
             <p>
-              These days I&apos;m diving deep into Next.js and exploring how AI
-              tools like Claude Code are changing the way we build software.
-              It&apos;s a wild time to be a developer, and I&apos;m here for it.
+              A lot of those systems run on older platforms like ColdFusion. I
+              know them well enough to keep them healthy, and I know modern
+              stacks well enough to get agencies off of them safely.
+            </p>
+            <p>
+              These days I build with Next.js, TypeScript, and Postgres, and use
+              AI tools like Claude Code to move faster. The side projects above
+              are where I keep those skills sharp.
             </p>
             <p>
               Outside of code, I&apos;m a cyclist working toward my first
@@ -387,18 +457,6 @@ function About() {
             </blockquote>
           </div>
           <div className="lg:col-span-2 space-y-6">
-            {/* Photo placeholder */}
-            <div className="gradient-border overflow-hidden">
-              <div className="flex aspect-square items-center justify-center bg-gradient-to-br from-muted-bg to-card-bg">
-                <div className="text-center">
-                  <div className="mx-auto mb-3 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-[var(--gradient-start)] to-[var(--gradient-mid)]">
-                    <span className="text-2xl font-bold text-white">FF</span>
-                  </div>
-                  <p className="text-xs text-muted">Photo coming soon</p>
-                </div>
-              </div>
-            </div>
-
             {/* Skills */}
             <div className="gradient-border overflow-hidden p-6">
               <h3 className="mb-4 text-xs font-semibold tracking-widest text-accent uppercase">
@@ -408,10 +466,10 @@ function About() {
                 {skills.map((skill) => (
                   <div
                     key={skill.name}
-                    className="flex items-center justify-between"
+                    className="flex items-center justify-between gap-3"
                   >
                     <span className="text-sm text-foreground">{skill.name}</span>
-                    <span className="rounded-md bg-muted-bg border border-border/50 px-2 py-0.5 text-xs text-muted font-mono">
+                    <span className="shrink-0 rounded-md bg-muted-bg border border-border/50 px-2 py-0.5 text-xs text-muted font-mono">
                       {skill.level}
                     </span>
                   </div>
@@ -426,7 +484,7 @@ function About() {
               </h3>
               <ul className="space-y-3">
                 {[
-                  { icon: "🔨", text: "Learning Next.js & TypeScript" },
+                  { icon: "🔨", text: "Shipping side projects in Next.js" },
                   { icon: "🚴", text: "Training for sprint triathlon" },
                   { icon: "🤖", text: "Building with Claude Code" },
                   { icon: "✍️", text: "Writing about the journey" },
@@ -470,72 +528,17 @@ function Contact() {
             Let&apos;s Connect
           </h2>
           <p className="max-w-xl text-muted">
-            Whether you want to talk tech, cycling, or just say hi — I&apos;d
-            love to hear from you.
+            Have an HR systems or modernization effort you&apos;re staffing?
+            Want to talk tech or cycling, or just say hi? I&apos;d love to hear
+            from you.{" "}
+            <span className="font-medium text-foreground">
+              My résumé is available on request.
+            </span>
           </p>
         </div>
         <div className="grid gap-12 lg:grid-cols-2">
           <div className="gradient-border overflow-hidden p-8">
-            <form
-              action="https://formspree.io/f/your-form-id"
-              method="POST"
-              className="space-y-5"
-            >
-              <div>
-                <label
-                  htmlFor="name"
-                  className="mb-1.5 block text-sm font-medium text-foreground"
-                >
-                  Name
-                </label>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  required
-                  className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted/60 transition-colors focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20"
-                  placeholder="Your name"
-                />
-              </div>
-              <div>
-                <label
-                  htmlFor="email"
-                  className="mb-1.5 block text-sm font-medium text-foreground"
-                >
-                  Email
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  required
-                  className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted/60 transition-colors focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20"
-                  placeholder="you@example.com"
-                />
-              </div>
-              <div>
-                <label
-                  htmlFor="message"
-                  className="mb-1.5 block text-sm font-medium text-foreground"
-                >
-                  Message
-                </label>
-                <textarea
-                  id="message"
-                  name="message"
-                  rows={5}
-                  required
-                  className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted/60 transition-colors focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20 resize-none"
-                  placeholder="What's on your mind?"
-                />
-              </div>
-              <button
-                type="submit"
-                className="btn-glow w-full rounded-xl px-7 py-3.5 text-sm font-medium text-white"
-              >
-                Send Message
-              </button>
-            </form>
+            <ContactForm />
           </div>
           <div className="space-y-6">
             <div>
@@ -630,8 +633,9 @@ export default function Home() {
   return (
     <main>
       <Hero />
-      <FamilyProjects />
+      <WhatIDo />
       <SideProjects />
+      <FamilyProjects />
       <BlogPreview />
       <About />
       <Contact />

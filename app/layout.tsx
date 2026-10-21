@@ -18,15 +18,16 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Ferrell Ferguson - Developer. Cyclist. Dad. Builder of things.",
+    default: "Ferrell Ferguson - Federal HR Systems Engineer",
     template: "%s | Ferrell Ferguson",
   },
   description:
-    "Personal site of Ferrell Ferguson — software engineer with 25+ years of experience, cyclist, dad, and builder of things.",
+    "Ferrell Ferguson is an HR systems engineer for the federal government with 25+ years of experience keeping mission-critical systems running and modernizing legacy platforms.",
   metadataBase: new URL("https://ferrellferguson.com"),
 };
 
 const navLinks = [
+  { href: "/#work", label: "Work" },
   { href: "/#projects", label: "Projects" },
   { href: "/blog", label: "Blog" },
   { href: "/fitness", label: "Fitness" },
@@ -79,9 +80,9 @@ function Footer() {
               </span>
             </div>
             <p className="text-sm leading-relaxed text-muted">
-              Developer. Cyclist. Dad.
+              Federal HR systems engineer.
               <br />
-              Builder of things.
+              Cyclist. Dad. Builder of things.
             </p>
           </div>
           <div>
